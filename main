@@ -1,385 +1,225 @@
-// ohol 
-
+// ohol 
 // ohol 2
-
 
 // check invalid space interactions !!!!!
 
-
-// Libraries            {
-
+// Libraries            {
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
-
 #include <time.h>
-
 // }
 
 // Global Definitions {
-
-#define MAPWIDTH     32
-
-#define MAPHEIGHT    32
-
-#define MAPLENGTH    MAPWIDTH * MAPHEIGHT
-
-#define TILEWIDTH    8
-
-#define TILEHEIGHT 4
-
-#define TILELENGTH TILEWIDTH * TILEHEIGHT
-
-#define SCNTLEWIDTH 6
-
+#define MAPWIDTH     32
+#define MAPHEIGHT    32
+#define MAPLENGTH    MAPWIDTH * MAPHEIGHT
+#define TILEWIDTH    8
+#define TILEHEIGHT   4
+#define TILELENGTH   TILEWIDTH * TILEHEIGHT
+#define SCNTLEWIDTH  6
 #define SCNTLEHEIGHT 6
-
 #define SCNTLELENGTH SCNTLEWIDTH * SCNTLEHEIGHT
-
-#define SCREENWIDTH TILEWIDTH   * SCNTLEWIDTH
-
-#define SCREENHEIGHT TILEHEIGHT  * SCNTLEHEIGHT
-
+#define SCREENWIDTH  TILEWIDTH   * SCNTLEWIDTH
+#define SCREENHEIGHT TILEHEIGHT  * SCNTLEHEIGHT
 #define SCREENLENGTH SCREENWIDTH * SCREENHEIGHT
 
-
-#define NUMSPRITES 500
-
-#define SPRITEWIDTH 8
-
+#define NUMSPRITES   500
+#define SPRITEWIDTH  8
 #define SPRITEHEIGHT 8
-
 #define SPRITELENGTH SPRITEWIDTH * SPRITEHEIGHT
 
-
-#define HAND         0
-
-#define PLAYER_S     3
-
-#define SPACE        0
-
-#define SPACE_S      0
-
-#define OOBBARRIER 1
-
+#define HAND         0
+#define PLAYER_S     3
+#define SPACE        0
+#define SPACE_S      0
+#define OOBBARRIER   1
 #define OOBBARRIER_S 1
-
-#define STONE        2
-
-#define STONE_S      10 // +9
-
-#define BIG_STONE    3
-
-#define BIG_STONE_S 20
-
-#define SHARP_STONE 4
-
+#define STONE        2
+#define STONE_S      10 // +9
+#define BIG_STONE    3
+#define BIG_STONE_S  20
+#define SHARP_STONE  4
 #define SHARP_STONE_S 21 // +3
-
-#define FLINT_CHIP 5
-
+#define FLINT_CHIP   5
 #define FLINT_CHIP_S 25 // +3
-
-#define ARROW_HEAD 6
-
+#define ARROW_HEAD   6
 #define ARROW_HEAD_S 29
-
-#define FLINT_ROCK 7
-
+#define FLINT_ROCK   7
 #define FLINT_ROCK_S 30
-
-#define YEW          8
-
-#define YEW_S        31 // +1
-
-#define PINE         9
-
-#define PINE_S       33 // +1
-
-#define MAIPEL       10
-
-#define MAIPEL_S     35 // +1
-
-#define BENT         11
-
-#define BENT_S       37 // +1
-
-#define JUNIPER      12
-
-#define JUNIPER_S    39
-
-#define YEW_BRANCH 13
-
+#define YEW          8
+#define YEW_S        31 // +1
+#define PINE         9
+#define PINE_S       33 // +1
+#define MAIPEL       10
+#define MAIPEL_S     35 // +1
+#define BENT         11
+#define BENT_S       37 // +1
+#define JUNIPER      12
+#define JUNIPER_S    39
+#define YEW_BRANCH   13
 #define YEW_BRANCH_S 40
-
-#define BOW_SHAFT    14
-
-#define BOW_SHAFT_S 41
-
+#define BOW_SHAFT    14
+#define BOW_SHAFT_S  41
 #define STRAIT_BRANCH 15
-
 #define STRAIT_BRANCH_S 42 // +1
-
 #define STRAIT_SHAFT 16
-
 #define STRAIT_SHAFT_S 44 // +1
-
-#define BENT_BRANCH 17
-
+#define BENT_BRANCH  17
 #define BENT_BRANCH_S 46 // +1
-
-#define BENT_SHAFT 18
-
+#define BENT_SHAFT   18
 #define BENT_SHAFT_S 48 // +1
-
-#define PUMP_KIT     19
-
-#define PUMP_KIT_S 50
-
-#define SHORT_SHAFT 20
-
+#define PUMP_KIT     19
+#define PUMP_KIT_S   50
+#define SHORT_SHAFT  20
 #define SHORT_SHAFT_S 51
-
-#define STAKES       21
-
-#define STAKES_S     52 // +5
+#define STAKES       21
+#define STAKES_S     52 // +5
 
 
-// down 
-
+// down 
 // up
-
 // press
-
 // need obj set
-
 // need sprite
 
-#define TONGS        22
-
-#define TONGS_S      58
-
+#define TONGS        22
+#define TONGS_S      58
 
 #define MILKWEED
-
-#define MILKWEEDSEED 
-
+#define MILKWEEDSEED 
 #define THREAD
-
 #define ROPE
-
 #define LASSO
 
-
 #define TIEDBENT
-
 #define TIEDSTRAIT
-
 #define BOW
-
 #define TIEDSHORT
-
 #define TIEDSCEWER
 
-
 #define FIREDRILL
-
 #define HACHET
-
 #define FETHERLESSARROW
-
 #define TIPLESSARROW
-
 #define ARROW
 
-
 #define GOOSEPOND
-
 #define EGG
-
 #define FEATHER
-
 #define FLECHING
 
-
 #define SMOLDERINGSHAFT
-
 #define LEAF
-
 #define EMBERLEAF
-
 #define FIRESTARTER
-
 #define EMBER
 
-
 #define SMALLFIRE
-
 #define FASTFIRE
-
 #define SLOWFIRE
-
 #define SMOLDERINGEMBER
 
 
-
-
-// Program Structures  {
-
+// Program Structures  {
 struct player
-
 {
-
-    int position;
-
-    int hunger;
-
-    int hungertime;
-
-    int age;
-
-    int bdaytime;
-
-    int hand;
-
-    int back;
-
-    int head;
-
-    int body;
-
-    int legs;
-
-    int lfoot;
-
-    int rfoot;
-
+    int position;
+    int hunger;
+    int hungertime;
+    int age;
+    int bdaytime;
+    int hand;
+    int back;
+    int head;
+    int body;
+    int legs;
+    int lfoot;
+    int rfoot;
 };
-
 
 struct object
-
 {
-
-    int type;
-
-    int num_sprites;
-
-    int sprite_num;
-
-    int sprite;
-
-    int position;
-
-    int clockid;
-
-    int timeid;
-
-    int timenum;
-
-    int carryid;
-
-    bool playersolid;
-
-    bool sheepsolid;
-
-    bool plrcarry;
-
-    bool ret[5];
-
+    int type;
+    int num_sprites;
+    int sprite_num;
+    int sprite;
+    int position;
+    int clockid;
+    int timeid;
+    int timenum;
+    int carryid;
+    bool playersolid;
+    bool sheepsolid;
+    bool plrcarry;
+    bool ret[5];
 };
-
 
 struct objcarry
-
 {
-
-    int carrymun;
-
-    int carry1;
-
-    int carry2;
-
-    int carry3;
-
-    int carry4;
-
-    int carry5;
-
-    int carry6;
-
+    int carrymun;
+    int carry1;
+    int carry2;
+    int carry3;
+    int carry4;
+    int carry5;
+    int carry6;
 };
-
 
 struct clock
-
 {
-
-    int timeleft;
-
-    int objid;
-
+    int timeleft;
+    int objid;
 };
 
-
 // global vars
+int            map[MAPLENGTH];
+char           screen[SCREENLENGTH];
 
-int            map[MAPLENGTH];
+char           sprites[NUMSPRITES][SPRITELENGTH];
+struct player  players;
+int            voidobjs[MAPLENGTH + 1];
+struct object  objects[MAPLENGTH];
+int            voidclocks[MAPLENGTH + 1];
+struct clock   clocks[MAPLENGTH];
 
-char           screen[SCREENLENGTH];
-
-
-char           sprites[NUMSPRITES][SPRITELENGTH];
-
-
-struct player players;
-
-int            voidobjs[MAPLENGTH + 1];
-
-struct object objects[MAPLENGTH];
-
-int            voidclocks[MAPLENGTH + 1];
-
-struct clock clocks[MAPLENGTH];
-
+// function prototypes
+void setvoids();
+int  popvid();
+void pushvclocks(int id);
+int  popvclocks();
+void pushvid(int id);
+void setplayer();
+void setmap();
+void printmap();
+void printscreen();
+void setscreen();
+void useraction();
+void action(char in);
+void objaction(char in, char der);
+int  usermove(char in);
+bool collisioncheck(int positionToCheck);
+void setobj(int id, int type, int position);
+void carrydo(int handid, int groundid, int position);
+void replacedo(int handid, int groundid, int position);
+void recepiedo(int handid, int groundid, int position);
+void setsprites();
 
 // main
-
 int main()
-
 {
+    setvoids();
+    setsprites();
+    setplayer();
+    setmap();
 
-    setvoids();
-
-    setsprites();
-
-    setplayer();
-
-    setmap();
-
-    
-
-    while(true)
-
-    {
-
-        printscreen();
-
-
-        useraction();
-
-        
-
-        // clearscreen();
-
-    }
-
-    
-
-    return 0;
-
+    while(true)
+    {
+        printscreen();
+        useraction();
+        // clearscreen();
+    }
+    return 0;
 }
 
 
@@ -387,25 +227,25 @@ void setvoids()
 
 {
 
-    int x;
+    int x;
 
-    
 
-    voidobjs[0]   = MAPLENGTH;
 
-    voidclocks[0] = MAPLENGTH;
+    voidobjs[0]   = MAPLENGTH;
 
-    
+    voidclocks[0] = MAPLENGTH;
 
-    for(x = 0; x < MAPLENGTH; x++)
 
-    {
 
-        voidobjs[x + 1]   = x;
+    for(x = 0; x < MAPLENGTH; x++)
 
-        voidclocks[x + 1] = x;
+    {
 
-    }
+        voidobjs[x + 1]   = x;
+
+        voidclocks[x + 1] = x;
+
+    }
 
 }
 
@@ -414,9 +254,9 @@ int popvid()
 
 {
 
-    voidobjs[0]--;
+    voidobjs[0]--;
 
-    return voidobjs[voidobjs[0] + 1];
+    return voidobjs[voidobjs[0] + 1];
 
 }
 
@@ -425,9 +265,9 @@ void pushvclocks(int id)
 
 {
 
-    voidclocks[0]++;
+    voidclocks[0]++;
 
-    voidclocks[voidclocks[0]] = id;
+    voidclocks[voidclocks[0]] = id;
 
 }
 
@@ -436,9 +276,9 @@ int popvclocks()
 
 {
 
-    voidclocks[0]--;
+    voidclocks[0]--;
 
-    return voidclocks[voidclocks[0] + 1];
+    return voidclocks[voidclocks[0] + 1];
 
 }
 
@@ -447,9 +287,9 @@ void pushvid(int id)
 
 {
 
-    voidobjs[0]++;
+    voidobjs[0]++;
 
-    voidobjs[voidobjs[0]] = id;
+    voidobjs[voidobjs[0]] = id;
 
 }
 
@@ -458,31 +298,31 @@ void setplayer()
 
 {
 
-    players.position = (MAPWIDTH / 2) + ((MAPHEIGHT / 2)
+    players.position = (MAPWIDTH / 2) + ((MAPHEIGHT / 2)
 
-                        * MAPHEIGHT);
+                        * MAPHEIGHT);
 
-    players.hunger     = 10;
+    players.hunger     = 10;
 
-    players.age        = 10;
+    players.age        = 10;
 
-    players.bdaytime   = 60;
+    players.bdaytime   = 60;
 
-    players.hungertime = 10;
+    players.hungertime = 10;
 
-    players.hand       = 0;
+    players.hand       = 0;
 
-    players.back       = 0;
+    players.back       = 0;
 
-    players.head       = 0;
+    players.head       = 0;
 
-    players.body       = 0;
+    players.body       = 0;
 
-    players.legs       = 0;
+    players.legs       = 0;
 
-    players.lfoot      = 0;
+    players.lfoot      = 0;
 
-    players.rfoot      = 0;
+    players.rfoot      = 0;
 
 }
 
@@ -491,125 +331,125 @@ void setmap()
 
 {
 
-    int x, y;
+    int x, y;
 
-    
 
-    for(x = 0; x < MAPLENGTH; x++)
 
-    {
+    for(x = 0; x < MAPLENGTH; x++)
 
-        y = rand() % 40;
+    {
 
-        
+        y = rand() % 40;
 
-        switch(y)
 
-        {
 
-            case 0:
+        switch(y)
 
-            case 1:
+        {
 
-                map[x] = popvid();
+            case 0:
 
-                setobj(map[x], STONE, x);
+            case 1:
 
-                break;
+                map[x] = popvid();
 
-            case 3:
+                setobj(map[x], STONE, x);
 
-                map[x] = popvid();
+                break;
 
-                setobj(map[x], BIG_STONE, x);
+            case 3:
 
-                break;
+                map[x] = popvid();
 
-            case 4:
+                setobj(map[x], BIG_STONE, x);
 
-                map[x] = popvid();
+                break;
 
-                setobj(map[x], MAIPEL, x);
+            case 4:
 
-                break;
+                map[x] = popvid();
 
-            case 5:
+                setobj(map[x], MAIPEL, x);
 
-                map[x] = popvid();
+                break;
 
-                setobj(map[x], FLINT_ROCK, x);
+            case 5:
 
-                break;
+                map[x] = popvid();
 
-            case 6:
+                setobj(map[x], FLINT_ROCK, x);
 
-                map[x] = popvid();
+                break;
 
-                setobj(map[x], YEW, x);
+            case 6:
 
-                break;
+                map[x] = popvid();
 
-            case 7:
+                setobj(map[x], YEW, x);
 
-                map[x] = popvid();
+                break;
 
-                setobj(map[x], JUNIPER, x);
+            case 7:
 
-                break;
+                map[x] = popvid();
 
-            case 8:
+                setobj(map[x], JUNIPER, x);
 
-                map[x] = popvid();
+                break;
 
-                setobj(map[x], BENT, x);
+            case 8:
 
-                break;
+                map[x] = popvid();
 
-            default:
+                setobj(map[x], BENT, x);
 
-                map[x] = SPACE;
+                break;
 
-                break;
+            default:
 
-        }
+                map[x] = SPACE;
 
-        
+                break;
 
-        // set out of map bounds wall
+        }
 
-        // north
 
-        if(x < MAPWIDTH * (SCNTLEWIDTH / 2))
 
-            map[x] = OOBBARRIER;
+        // set out of map bounds wall
 
-        // south
+        // north
 
-        if(x > MAPLENGTH - (MAPWIDTH * (SCNTLEWIDTH / 2)))
+        if(x < MAPWIDTH * (SCNTLEWIDTH / 2))
 
-            map[x] = OOBBARRIER;
+            map[x] = OOBBARRIER;
 
-        // west
+        // south
 
-        for(y = 0; y < (SCNTLEWIDTH / 2); y++)
+        if(x > MAPLENGTH - (MAPWIDTH * (SCNTLEWIDTH / 2)))
 
-            if(x % MAPWIDTH == y)
+            map[x] = OOBBARRIER;
 
-                map[x] = OOBBARRIER;
+        // west
 
-        // east
+        for(y = 0; y < (SCNTLEWIDTH / 2); y++)
 
-        for(y = 1; y <= (SCNTLEHEIGHT / 2); y++)
+            if(x % MAPWIDTH == y)
 
-            if(x % MAPWIDTH == MAPWIDTH - y)
+                map[x] = OOBBARRIER;
 
-                map[x] = OOBBARRIER;
+        // east
 
-    }
+        for(y = 1; y <= (SCNTLEHEIGHT / 2); y++)
 
-    setobj(0, SPACE, 0);
+            if(x % MAPWIDTH == MAPWIDTH - y)
 
-    setobj(1, OOBBARRIER, 1);
+                map[x] = OOBBARRIER;
+
+    }
+
+    setobj(0, SPACE, 0);
+
+    setobj(1, OOBBARRIER, 1);
 
 }
 
@@ -618,21 +458,21 @@ void printmap()
 
 {
 
-    int x;
+    int x;
 
-    
 
-    for(x = 0; x < MAPLENGTH; x++)
 
-    {
+    for(x = 0; x < MAPLENGTH; x++)
 
-        if(x % MAPWIDTH == 0)
+    {
 
-            printf("|\n");
+        if(x % MAPWIDTH == 0)
 
-        printf("%d", objects[map[x]].type);
+            printf("|\n");
 
-    }
+        printf("%d", objects[map[x]].type);
+
+    }
 
 }
 
@@ -641,29 +481,29 @@ void printscreen()
 
 {
 
-    int x;
+    int x;
 
-    
 
-    setscreen();
 
-    
+    setscreen();
 
-    printf("%d", objects[players.hand].type);
 
-    
 
-    for(x = 0; x < SCREENLENGTH; x++)
+    printf("%d", objects[players.hand].type);
 
-    {
 
-        if(x % SCREENWIDTH == 0)
 
-            printf("|\n");
+    for(x = 0; x < SCREENLENGTH; x++)
 
-        printf("%c", screen[x]);
+    {
 
-    }
+        if(x % SCREENWIDTH == 0)
+
+            printf("|\n");
+
+        printf("%c", screen[x]);
+
+    }
 
 }
 
@@ -672,115 +512,115 @@ void setscreen()
 
 {
 
-    int x, y, z, l;
+    int x, y, z, l;
 
-    int start = players.position - (SCNTLEWIDTH / 2) -
+    int start = players.position - (SCNTLEWIDTH / 2) -
 
-                    ((SCNTLEHEIGHT / 2) * MAPWIDTH);
+                    ((SCNTLEHEIGHT / 2) * MAPWIDTH);
 
-                    
 
-    // fix variable sprite sizes !!!!!!!!!
 
-    for(l = 0; l < SCNTLEHEIGHT; l++) // screen tile height
+    // fix variable sprite sizes !!!!!!!!!
 
-    {
+    for(l = 0; l < SCNTLEHEIGHT; l++) // screen tile height
 
-        for(z = 0; z < TILEHEIGHT; z++) // tile height
+    {
 
-        for(y = 0; y < SCNTLEWIDTH; y++) // sreen tile width
+        for(z = 0; z < TILEHEIGHT; z++) // tile height
 
-        {
+        for(y = 0; y < SCNTLEWIDTH; y++) // sreen tile width
 
-        for(x = 0; x < TILEWIDTH; x++)
+        {
 
-        {
+        for(x = 0; x < TILEWIDTH; x++)
 
-            // set sprite
+        {
 
-            screen[x + (y * TILEWIDTH) + (z * SCREENWIDTH) +
+            // set sprite
 
-                (l * SCREENWIDTH * TILEHEIGHT)] = 
+            screen[x + (y * TILEWIDTH) + (z * SCREENWIDTH) +
 
-                    sprites[objects[map[start + y + (l * 
+                (l * SCREENWIDTH * TILEHEIGHT)] = 
 
-                                MAPWIDTH)]].sprite][x +
+                    sprites[objects[map[start + y + (l * 
 
-                        (z * SPRITEWIDTH) + (SPRITELENGTH / 2)];
+                                MAPWIDTH)]].sprite][x +
 
-            
+                        (z * SPRITEWIDTH) + (SPRITELENGTH / 2)];
 
-            // set player sprite
 
-            if(start + y + (l * MAPWIDTH) == players.position)
 
-                if(sprites[PLAYER_S][x + (z * SPRITEWIDTH) + 
+            // set player sprite
 
-                                    (SPRITELENGTH / 2)] != ' ')
+            if(start + y + (l * MAPWIDTH) == players.position)
 
-                    screen[x + (y * TILEWIDTH) + (z * SCREENWIDTH) 
+                if(sprites[PLAYER_S][x + (z * SPRITEWIDTH) + 
 
-                            + (l * SCREENWIDTH * TILEHEIGHT)] = 
+                                    (SPRITELENGTH / 2)] != ' ')
 
-                        sprites[PLAYER_S][x + (z * SPRITEWIDTH) + 
+                    screen[x + (y * TILEWIDTH) + (z * SCREENWIDTH) 
 
-                                        (SPRITELENGTH / 2)];
+                            + (l * SCREENWIDTH * TILEHEIGHT)] = 
 
-                                        
+                        sprites[PLAYER_S][x + (z * SPRITEWIDTH) + 
 
-            // set player sprite overlap
+                                        (SPRITELENGTH / 2)];
 
-            if(start + y + (l * MAPWIDTH) + MAPWIDTH == players.position)
 
-                if(sprites[PLAYER_S][x + (z * SPRITEWIDTH)] != ' ')
 
-                    screen[x + (y * TILEWIDTH) + (z * SCREENWIDTH) 
+            // set player sprite overlap
 
-                            + (l * SCREENWIDTH * TILEHEIGHT)] = 
+            if(start + y + (l * MAPWIDTH) + MAPWIDTH == players.position)
 
-                        sprites[PLAYER_S][x + (z * SPRITEWIDTH)];
+                if(sprites[PLAYER_S][x + (z * SPRITEWIDTH)] != ' ')
 
-                        
+                    screen[x + (y * TILEWIDTH) + (z * SCREENWIDTH) 
 
-            //printf("c%d ", x + (z * SPRITEWIDTH));
+                            + (l * SCREENWIDTH * TILEHEIGHT)] = 
 
-            //printf("p%d ", x + (y * TILEWIDTH) + (z * SCREENWIDTH) 
+                        sprites[PLAYER_S][x + (z * SPRITEWIDTH)];
 
-                            //+ (l * SCREENWIDTH * TILEHEIGHT));
 
-            //printf("\n");
 
-                        
+            //printf("c%d ", x + (z * SPRITEWIDTH));
 
-            // set hand sprite !!!!!!
+            //printf("p%d ", x + (y * TILEWIDTH) + (z * SCREENWIDTH) 
 
-                        
+                            //+ (l * SCREENWIDTH * TILEHEIGHT));
 
-            // set sprite overlap
+            //printf("\n");
 
-            if(sprites[objects[map[start + y + (l * MAPWIDTH) + 
 
-                    MAPWIDTH]].sprite][x + (z * SPRITEWIDTH)] != ' ')
 
-                screen[x + (y * TILEWIDTH) + (z * SCREENWIDTH) +
+            // set hand sprite !!!!!!
 
-                        (l * SCREENWIDTH * TILEHEIGHT)] = 
 
-                    sprites[objects[map[start + y + (l * 
 
-                            MAPWIDTH) + MAPWIDTH]].sprite][x + 
+            // set sprite overlap
 
-                                (z * SPRITEWIDTH)];
+            if(sprites[objects[map[start + y + (l * MAPWIDTH) + 
 
-            }
+                    MAPWIDTH]].sprite][x + (z * SPRITEWIDTH)] != ' ')
 
-            //printf("\n");
+                screen[x + (y * TILEWIDTH) + (z * SCREENWIDTH) +
 
-        }
+                        (l * SCREENWIDTH * TILEHEIGHT)] = 
 
-        //printf("\n");
+                    sprites[objects[map[start + y + (l * 
 
-    }
+                            MAPWIDTH) + MAPWIDTH]].sprite][x + 
+
+                                (z * SPRITEWIDTH)];
+
+            }
+
+            //printf("\n");
+
+        }
+
+        //printf("\n");
+
+    }
 
 }
 
@@ -789,49 +629,49 @@ void useraction()
 
 {
 
-    char in, ret;
+    char in, ret;
 
-                    //interact carry replace
+                    //interact carry replace
 
-    printf("\nMove(km,.) down(l) up(o) press(p):");
+    printf("\nMove(km,.) down(l) up(o) press(p):");
 
-    scanf("%c%c", &in, &ret);
+    scanf("%c%c", &in, &ret);
 
-    
 
-    switch(in)
 
-    {
+    switch(in)
 
-        case 'k':
+    {
 
-        case '.':
+        case 'k':
 
-        case 'm':
+        case '.':
 
-        case ',':
+        case 'm':
 
-            usermove(in);
+        case ',':
 
-            break;
+            usermove(in);
 
-        case 'l':
+            break;
 
-        case 'o':
+        case 'l':
 
-        case 'p':
+        case 'o':
 
-            action(in);
+        case 'p':
 
-            break;
+            action(in);
 
-        default:
+            break;
 
-            printf("?: ");
+        default:
 
-            break;
+            printf("?: ");
 
-    }
+            break;
+
+    }
 
 }
 
@@ -840,69 +680,69 @@ void action(char in)
 
 {
 
-    char der, ret;
+    char der, ret;
 
-    
 
-    printf("\ndirection(km,. pi) to ");
 
-    switch(in)
+    printf("\ndirection(km,. pi) to ");
 
-    {
+    switch(in)
 
-        case 'l':
+    {
 
-            printf("down");
+        case 'l':
 
-            break;
+            printf("down");
 
-        case 'o':
+            break;
 
-            printf("up");
+        case 'o':
 
-            break;
+            printf("up");
 
-        case 'p':
+            break;
 
-            printf("press");
+        case 'p':
 
-            break;
+            printf("press");
 
-    }
+            break;
 
-    printf(":");
+    }
 
-    scanf("%c%c", &der, &ret);
+    printf(":");
 
-    
+    scanf("%c%c", &der, &ret);
 
-    switch(der)
 
-    {
 
-        case 'k':
+    switch(der)
 
-        case '.':
+    {
 
-        case 'm':
+        case 'k':
 
-        case ',':
+        case '.':
 
-        case 'p':
+        case 'm':
 
-        // case 'i':
+        case ',':
 
-            objaction(in, der);
+        case 'p':
 
-            break;
+        // case 'i':
 
-        default:
+            objaction(in, der);
 
-            printf("?: ");
+            break;
 
-            break;
+        default:
 
-    }
+            printf("?: ");
+
+            break;
+
+    }
 
 }
 
@@ -911,77 +751,77 @@ void objaction(char in, char der)
 
 {
 
-    int position;
+    int position;
 
-    int groundid;
+    int groundid;
 
-    
 
-    switch(der)
 
-    {
+    switch(der)
 
-        case 'k':
+    {
 
-            position = players.position - MAPWIDTH;
+        case 'k':
 
-            break;
+            position = players.position - MAPWIDTH;
 
-        case '.':
+            break;
 
-            position = players.position + 1;
+        case '.':
 
-            break;
+            position = players.position + 1;
 
-        case 'm':
+            break;
 
-            position = players.position - 1;
+        case 'm':
 
-            break;
+            position = players.position - 1;
 
-        case ',':
+            break;
 
-            position = players.position + MAPWIDTH;
+        case ',':
 
-            break;
+            position = players.position + MAPWIDTH;
 
-        case 'p':
+            break;
 
-            position = players.position;
+        case 'p':
 
-            break;
+            position = players.position;
 
-    }
+            break;
 
-    
+    }
 
-    groundid = map[position];
 
-    
 
-    switch(in)
+    groundid = map[position];
 
-    {
 
-        case 'l':
 
-            recepiedo(players.hand, groundid, position);
+    switch(in)
 
-            break;
+    {
 
-        case 'o':
+        case 'l':
 
-            carrydo(players.hand, groundid, position);
+            recepiedo(players.hand, groundid, position);
 
-            break;
+            break;
 
-        case 'p':
+        case 'o':
 
-            replacedo(players.hand, groundid, position);
+            carrydo(players.hand, groundid, position);
 
-            break;
+            break;
 
-    }
+        case 'p':
+
+            replacedo(players.hand, groundid, position);
+
+            break;
+
+    }
 
 }
 
@@ -990,93 +830,93 @@ int usermove(char in)
 
 {
 
-    int position = players.position;
+    int position = players.position;
 
-    
 
-    switch(in)
 
-    {
+    switch(in)
 
-        case 'k':
+    {
 
-            if(collisioncheck(position - MAPWIDTH) == true)
+        case 'k':
 
-                return position;
+            if(collisioncheck(position - MAPWIDTH) == true)
 
-            else 
+                return position;
 
-            {
+            else 
 
-                printf("you head north");
+            {
 
-                position = position - MAPWIDTH;
+                printf("you head north");
 
-            }
+                position = position - MAPWIDTH;
 
-            break;
+            }
 
-        case ',':
+            break;
 
-            if(collisioncheck(position + MAPWIDTH) == true)
+        case ',':
 
-                return position;
+            if(collisioncheck(position + MAPWIDTH) == true)
 
-            else 
+                return position;
 
-            {
+            else 
 
-                printf("you head south");
+            {
 
-                position = position + MAPWIDTH;
+                printf("you head south");
 
-            }
+                position = position + MAPWIDTH;
 
-            break;
+            }
 
-        case 'm':
+            break;
 
-            if(collisioncheck(position - 1) == true)
+        case 'm':
 
-                return position;
+            if(collisioncheck(position - 1) == true)
 
-            else 
+                return position;
 
-            {
+            else 
 
-                printf("you head west");
+            {
 
-                position = position - 1;
+                printf("you head west");
 
-            }
+                position = position - 1;
 
-            break;
+            }
 
-        case '.':
+            break;
 
-            if(collisioncheck(position + 1) == true)
+        case '.':
 
-                return position;
+            if(collisioncheck(position + 1) == true)
 
-            else 
+                return position;
 
-            {
+            else 
 
-                printf("you head east");
+            {
 
-                position = position + 1;
+                printf("you head east");
 
-            }
+                position = position + 1;
 
-            break;
+            }
 
-    }
+            break;
 
-    players.position = position;
+    }
 
-    
+    players.position = position;
 
-    return position;
+
+
+    return position;
 
 }
 
@@ -1085,7 +925,7 @@ bool collisioncheck(int positionToCheck)
 
 {
 
-    return objects[map[positionToCheck]].playersolid;
+    return objects[map[positionToCheck]].playersolid;
 
 }
 
@@ -1094,613 +934,613 @@ void setobj(int id, int type, int position)
 
 {
 
-    switch(type)
+    switch(type)
 
-    {
+    {
 
-        // space
+        // space
 
-        case SPACE:
+        case SPACE:
 
-            objects[id].type = SPACE;
+            objects[id].type = SPACE;
 
-            objects[id].num_sprites = 1;
+            objects[id].num_sprites = 1;
 
-            objects[id].sprite = SPACE_S;
+            objects[id].sprite = SPACE_S;
 
-            objects[id].position = position;
+            objects[id].position = position;
 
-            objects[id].clockid = 0;
+            objects[id].clockid = 0;
 
-            objects[id].carryid = 0;
+            objects[id].carryid = 0;
 
-            objects[id].playersolid = false;
+            objects[id].playersolid = false;
 
-            objects[id].sheepsolid  = false;
+            objects[id].sheepsolid  = false;
 
-            objects[id].plrcarry = false;
+            objects[id].plrcarry = false;
 
-            break;
-
-    
-
-        // oob barier
-
-        case OOBBARRIER:
-
-            objects[id].type = OOBBARRIER;
-
-            objects[id].num_sprites = 1;
-
-            objects[id].sprite = OOBBARRIER_S;
-
-            objects[id].position = position;
-
-            objects[id].clockid = 0;
-
-            objects[id].carryid = 0;
-
-            objects[id].playersolid = true;
-
-            objects[id].sheepsolid  = true;
-
-            objects[id].plrcarry = false;
-
-            break;
+            break;
 
 
-        // rock
 
-        case STONE:
+        // oob barier
 
-            objects[id].type = STONE;
+        case OOBBARRIER:
 
-            objects[id].num_sprites = 10;
+            objects[id].type = OOBBARRIER;
 
-            objects[id].sprite_num = 1;
+            objects[id].num_sprites = 1;
 
-            objects[id].sprite = STONE_S;
+            objects[id].sprite = OOBBARRIER_S;
 
-            objects[id].position = position;
+            objects[id].position = position;
 
-            objects[id].clockid = 0;
+            objects[id].clockid = 0;
 
-            objects[id].carryid = 0;
+            objects[id].carryid = 0;
 
-            objects[id].playersolid = false;
+            objects[id].playersolid = true;
 
-            objects[id].sheepsolid  = false;
+            objects[id].sheepsolid  = true;
 
-            objects[id].plrcarry = true;
+            objects[id].plrcarry = false;
 
-            break;
+            break;
 
-            
 
-        // big rock
+        // rock
 
-        case BIG_STONE:
+        case STONE:
 
-            objects[id].type = BIG_STONE;
+            objects[id].type = STONE;
 
-            objects[id].num_sprites = 1;
+            objects[id].num_sprites = 10;
 
-            objects[id].sprite = BIG_STONE_S;
+            objects[id].sprite_num = 1;
 
-            objects[id].position = position;
+            objects[id].sprite = STONE_S;
 
-            objects[id].clockid = 0;
+            objects[id].position = position;
 
-            objects[id].carryid = 0;
+            objects[id].clockid = 0;
 
-            objects[id].playersolid = false;
+            objects[id].carryid = 0;
 
-            objects[id].sheepsolid  = false;
+            objects[id].playersolid = false;
+
+            objects[id].sheepsolid  = false;
+
+            objects[id].plrcarry = true;
+
+            break;
+
+
+
+        // big rock
+
+        case BIG_STONE:
+
+            objects[id].type = BIG_STONE;
+
+            objects[id].num_sprites = 1;
+
+            objects[id].sprite = BIG_STONE_S;
+
+            objects[id].position = position;
+
+            objects[id].clockid = 0;
+
+            objects[id].carryid = 0;
+
+            objects[id].playersolid = false;
+
+            objects[id].sheepsolid  = false;
 
 objects[id].plrcarry = false;
 
-            break;
+            break;
 
-            
 
-        // sharp rock
 
-        case SHARP_STONE:
+        // sharp rock
 
-            objects[id].type = SHARP_STONE;
+        case SHARP_STONE:
 
-            objects[id].num_sprites = 4;
+            objects[id].type = SHARP_STONE;
 
-            objects[id].sprite_num = 1;
+            objects[id].num_sprites = 4;
 
-            objects[id].sprite = SHARP_STONE_S;
+            objects[id].sprite_num = 1;
 
-            objects[id].position = position;
+            objects[id].sprite = SHARP_STONE_S;
 
-            objects[id].clockid = 0;
+            objects[id].position = position;
 
-            objects[id].carryid = 0;
+            objects[id].clockid = 0;
 
-            objects[id].playersolid = false;
+            objects[id].carryid = 0;
 
-            objects[id].sheepsolid  = false;
+            objects[id].playersolid = false;
 
-            objects[id].plrcarry = true;
+            objects[id].sheepsolid  = false;
 
-            break;
+            objects[id].plrcarry = true;
 
-            
+            break;
 
-        // FLINT_CHIP
 
-        case FLINT_CHIP:
 
-            objects[id].type = FLINT_CHIP;
+        // FLINT_CHIP
 
-            objects[id].num_sprites = 4;
+        case FLINT_CHIP:
 
-            objects[id].sprite_num = 1;
+            objects[id].type = FLINT_CHIP;
 
-            objects[id].sprite = FLINT_CHIP_S;
+            objects[id].num_sprites = 4;
 
-            objects[id].position = position;
+            objects[id].sprite_num = 1;
 
-            objects[id].clockid = 0;
+            objects[id].sprite = FLINT_CHIP_S;
 
-            objects[id].carryid = 0;
+            objects[id].position = position;
 
-            objects[id].playersolid = false;
+            objects[id].clockid = 0;
 
-            objects[id].sheepsolid  = false;
+            objects[id].carryid = 0;
 
-            objects[id].plrcarry = true;
+            objects[id].playersolid = false;
 
-            break;
+            objects[id].sheepsolid  = false;
 
-            
+            objects[id].plrcarry = true;
 
-        // ARROW_HEAD
+            break;
 
-        case ARROW_HEAD:
 
-            objects[id].type = ARROW_HEAD;
 
-            objects[id].num_sprites = 1;
+        // ARROW_HEAD
 
-            objects[id].sprite = ARROW_HEAD_S;
+        case ARROW_HEAD:
 
-            objects[id].position = position;
+            objects[id].type = ARROW_HEAD;
 
-            objects[id].clockid = 0;
+            objects[id].num_sprites = 1;
 
-            objects[id].carryid = 0;
+            objects[id].sprite = ARROW_HEAD_S;
 
-            objects[id].playersolid = false;
+            objects[id].position = position;
 
-            objects[id].sheepsolid  = false;
+            objects[id].clockid = 0;
 
-            objects[id].plrcarry = true;
+            objects[id].carryid = 0;
 
-            break;
+            objects[id].playersolid = false;
 
-            
+            objects[id].sheepsolid  = false;
 
-        // FLINT_ROCK
+            objects[id].plrcarry = true;
 
-        case FLINT_ROCK:
+            break;
 
-            objects[id].type = FLINT_ROCK;
 
-            objects[id].num_sprites = 1;
 
-            objects[id].sprite = FLINT_ROCK_S;
+        // FLINT_ROCK
 
-            objects[id].position = position;
+        case FLINT_ROCK:
 
-            objects[id].clockid = 0;
+            objects[id].type = FLINT_ROCK;
 
-            objects[id].carryid = 0;
+            objects[id].num_sprites = 1;
 
-            objects[id].playersolid = false;
+            objects[id].sprite = FLINT_ROCK_S;
 
-            objects[id].sheepsolid  = false;
+            objects[id].position = position;
 
-            objects[id].plrcarry = true;
+            objects[id].clockid = 0;
 
-            break;
+            objects[id].carryid = 0;
 
-            
+            objects[id].playersolid = false;
 
-        // yew
+            objects[id].sheepsolid  = false;
 
-        case YEW:
+            objects[id].plrcarry = true;
 
-            objects[id].type = YEW;
+            break;
 
-            objects[id].num_sprites = 2;
 
-            objects[id].sprite_num = 2;
 
-            objects[id].sprite = YEW_S + 1;
+        // yew
 
-            objects[id].position = position;
+        case YEW:
 
-            objects[id].clockid = 0;
+            objects[id].type = YEW;
 
-            objects[id].timenum = 60 * 60;
+            objects[id].num_sprites = 2;
 
-            objects[id].carryid = 0;
+            objects[id].sprite_num = 2;
 
-            objects[id].playersolid = true;
+            objects[id].sprite = YEW_S + 1;
 
-            objects[id].sheepsolid  = true;
+            objects[id].position = position;
 
-            objects[id].plrcarry = false;
+            objects[id].clockid = 0;
 
-            break;
+            objects[id].timenum = 60 * 60;
 
-            
+            objects[id].carryid = 0;
 
-        // PINE
+            objects[id].playersolid = true;
 
-        case PINE:
+            objects[id].sheepsolid  = true;
 
-            objects[id].type = PINE;
+            objects[id].plrcarry = false;
 
-            objects[id].num_sprites = 2;
+            break;
 
-            objects[id].sprite_num = 2;
 
-            objects[id].sprite = PINE_S + 1;
 
-            objects[id].position = position;
+        // PINE
 
-            objects[id].clockid = 0;
+        case PINE:
 
-            objects[id].timenum = 60 * 60;
+            objects[id].type = PINE;
 
-            objects[id].carryid = 0;
+            objects[id].num_sprites = 2;
 
-            objects[id].playersolid = true;
+            objects[id].sprite_num = 2;
 
-            objects[id].sheepsolid  = true;
+            objects[id].sprite = PINE_S + 1;
 
-            objects[id].plrcarry = false;
+            objects[id].position = position;
 
-            break;
+            objects[id].clockid = 0;
 
-            
+            objects[id].timenum = 60 * 60;
 
-        // MAIPEL
+            objects[id].carryid = 0;
 
-        case MAIPEL:
+            objects[id].playersolid = true;
 
-            objects[id].type = MAIPEL;
+            objects[id].sheepsolid  = true;
 
-            objects[id].num_sprites = 2;
+            objects[id].plrcarry = false;
 
-            objects[id].sprite_num = 2;
+            break;
 
-            objects[id].sprite = MAIPEL_S + 1;
 
-            objects[id].position = position;
 
-            objects[id].clockid = 0;
+        // MAIPEL
 
-            objects[id].timenum = 60 * 60;
+        case MAIPEL:
 
-            objects[id].carryid = 0;
+            objects[id].type = MAIPEL;
 
-            objects[id].playersolid = true;
+            objects[id].num_sprites = 2;
 
-            objects[id].sheepsolid  = true;
+            objects[id].sprite_num = 2;
 
-            objects[id].plrcarry = false;
+            objects[id].sprite = MAIPEL_S + 1;
 
-            break;
+            objects[id].position = position;
 
-            
+            objects[id].clockid = 0;
 
-        // BENT
+            objects[id].timenum = 60 * 60;
 
-        case BENT:
+            objects[id].carryid = 0;
 
-            objects[id].type = BENT;
+            objects[id].playersolid = true;
 
-            objects[id].num_sprites = 2;
+            objects[id].sheepsolid  = true;
 
-            objects[id].sprite_num = 2;
+            objects[id].plrcarry = false;
 
-            objects[id].sprite = BENT_S + 1;
+            break;
 
-            objects[id].position = position;
 
-            objects[id].clockid = 0;
 
-            objects[id].timenum = 60 * 60;
+        // BENT
 
-            objects[id].carryid = 0;
+        case BENT:
 
-            objects[id].playersolid = true;
+            objects[id].type = BENT;
 
-            objects[id].sheepsolid  = true;
+            objects[id].num_sprites = 2;
 
-            objects[id].plrcarry = false;
+            objects[id].sprite_num = 2;
 
-            break;
+            objects[id].sprite = BENT_S + 1;
 
-            
+            objects[id].position = position;
 
-        // JUNIPER
+            objects[id].clockid = 0;
 
-        case JUNIPER:
+            objects[id].timenum = 60 * 60;
 
-            objects[id].type = JUNIPER;
+            objects[id].carryid = 0;
 
-            objects[id].num_sprites = 1;
+            objects[id].playersolid = true;
 
-            objects[id].sprite = JUNIPER_S;
+            objects[id].sheepsolid  = true;
 
-            objects[id].position = position;
+            objects[id].plrcarry = false;
 
-            objects[id].clockid = 0;
+            break;
 
-            objects[id].carryid = 0;
 
-            objects[id].playersolid = true;
 
-            objects[id].sheepsolid  = true;
+        // JUNIPER
 
-            objects[id].plrcarry = false;
+        case JUNIPER:
 
-            break;
+            objects[id].type = JUNIPER;
 
-            
+            objects[id].num_sprites = 1;
 
-        // YEW_BRANCH
+            objects[id].sprite = JUNIPER_S;
 
-        case YEW_BRANCH:
+            objects[id].position = position;
 
-            objects[id].type = YEW_BRANCH;
+            objects[id].clockid = 0;
 
-            objects[id].num_sprites = 1;
+            objects[id].carryid = 0;
 
-            objects[id].sprite = YEW_BRANCH_S;
+            objects[id].playersolid = true;
 
-            objects[id].position = position;
+            objects[id].sheepsolid  = true;
 
-            objects[id].clockid = 0;
+            objects[id].plrcarry = false;
 
-            objects[id].carryid = 0;
+            break;
 
-            objects[id].playersolid = false;
 
-            objects[id].sheepsolid  = false;
 
-            objects[id].plrcarry = true;
+        // YEW_BRANCH
 
-            break;
+        case YEW_BRANCH:
 
-            
+            objects[id].type = YEW_BRANCH;
 
-        // BOW_SHAFT
+            objects[id].num_sprites = 1;
 
-        case BOW_SHAFT:
+            objects[id].sprite = YEW_BRANCH_S;
 
-            objects[id].type = BOW_SHAFT;
+            objects[id].position = position;
 
-            objects[id].num_sprites = 1;
+            objects[id].clockid = 0;
 
-            objects[id].sprite = BOW_SHAFT_S;
+            objects[id].carryid = 0;
 
-            objects[id].position = position;
+            objects[id].playersolid = false;
 
-            objects[id].clockid = 0;
+            objects[id].sheepsolid  = false;
 
-            objects[id].carryid = 0;
+            objects[id].plrcarry = true;
 
-            objects[id].playersolid = false;
+            break;
 
-            objects[id].sheepsolid  = false;
 
-            objects[id].plrcarry = true;
 
-            break;
+        // BOW_SHAFT
 
-            
+        case BOW_SHAFT:
 
-        // STRAIT_BRANCH
+            objects[id].type = BOW_SHAFT;
 
-        case STRAIT_BRANCH:
+            objects[id].num_sprites = 1;
 
-            objects[id].type = STRAIT_BRANCH;
+            objects[id].sprite = BOW_SHAFT_S;
 
-            objects[id].num_sprites = 2;
+            objects[id].position = position;
 
-            objects[id].sprite_num = 1;
+            objects[id].clockid = 0;
 
-            objects[id].sprite = STRAIT_BRANCH_S;
+            objects[id].carryid = 0;
 
-            objects[id].position = position;
+            objects[id].playersolid = false;
 
-            objects[id].clockid = 0;
+            objects[id].sheepsolid  = false;
 
-            objects[id].carryid = 0;
+            objects[id].plrcarry = true;
 
-            objects[id].playersolid = false;
+            break;
 
-            objects[id].sheepsolid  = false;
 
-            objects[id].plrcarry = true;
 
-            break;
+        // STRAIT_BRANCH
 
-            
+        case STRAIT_BRANCH:
 
-        // STRAIT_SHAFT
+            objects[id].type = STRAIT_BRANCH;
 
-        case STRAIT_SHAFT:
+            objects[id].num_sprites = 2;
 
-            objects[id].type = STRAIT_SHAFT;
+            objects[id].sprite_num = 1;
 
-            objects[id].num_sprites = 2;
+            objects[id].sprite = STRAIT_BRANCH_S;
 
-            objects[id].sprite_num = 1;
+            objects[id].position = position;
 
-            objects[id].sprite = STRAIT_SHAFT_S;
+            objects[id].clockid = 0;
 
-            objects[id].position = position;
+            objects[id].carryid = 0;
 
-            objects[id].clockid = 0;
+            objects[id].playersolid = false;
 
-            objects[id].carryid = 0;
+            objects[id].sheepsolid  = false;
 
-            objects[id].playersolid = false;
+            objects[id].plrcarry = true;
 
-            objects[id].sheepsolid  = false;
+            break;
 
-            objects[id].plrcarry = true;
 
-            break;
 
-            
+        // STRAIT_SHAFT
 
-        // BENT_BRANCH
+        case STRAIT_SHAFT:
 
-        case BENT_BRANCH:
+            objects[id].type = STRAIT_SHAFT;
 
-            objects[id].type = BENT_BRANCH;
+            objects[id].num_sprites = 2;
 
-            objects[id].num_sprites = 2;
+            objects[id].sprite_num = 1;
 
-            objects[id].sprite_num = 1;
+            objects[id].sprite = STRAIT_SHAFT_S;
 
-            objects[id].sprite = BENT_BRANCH_S;
+            objects[id].position = position;
 
-            objects[id].position = position;
+            objects[id].clockid = 0;
 
-            objects[id].clockid = 0;
+            objects[id].carryid = 0;
 
-            objects[id].carryid = 0;
+            objects[id].playersolid = false;
 
-            objects[id].playersolid = false;
+            objects[id].sheepsolid  = false;
 
-            objects[id].sheepsolid  = false;
+            objects[id].plrcarry = true;
 
-            objects[id].plrcarry = true;
+            break;
 
-            break;
 
-            
 
-        // BENT_SHAFT
+        // BENT_BRANCH
 
-        case BENT_SHAFT:
+        case BENT_BRANCH:
 
-            objects[id].type = BENT_SHAFT;
+            objects[id].type = BENT_BRANCH;
 
-            objects[id].num_sprites = 2;
+            objects[id].num_sprites = 2;
 
-            objects[id].sprite_num = 1;
+            objects[id].sprite_num = 1;
 
-            objects[id].sprite = BENT_SHAFT_S;
+            objects[id].sprite = BENT_BRANCH_S;
 
-            objects[id].position = position;
+            objects[id].position = position;
 
-            objects[id].clockid = 0;
+            objects[id].clockid = 0;
 
-            objects[id].carryid = 0;
+            objects[id].carryid = 0;
 
-            objects[id].playersolid = false;
+            objects[id].playersolid = false;
 
-            objects[id].sheepsolid  = false;
+            objects[id].sheepsolid  = false;
 
-            objects[id].plrcarry = true;
+            objects[id].plrcarry = true;
 
-            break;
+            break;
 
-            
 
-        // PUMP_KIT
 
-        case PUMP_KIT:
+        // BENT_SHAFT
 
-            objects[id].type = PUMP_KIT;
+        case BENT_SHAFT:
 
-            objects[id].num_sprites = 1;
+            objects[id].type = BENT_SHAFT;
 
-            objects[id].sprite = PUMP_KIT_S;
+            objects[id].num_sprites = 2;
 
-            objects[id].position = position;
+            objects[id].sprite_num = 1;
 
-            objects[id].clockid = 0;
+            objects[id].sprite = BENT_SHAFT_S;
 
-            objects[id].carryid = 0;
+            objects[id].position = position;
 
-            objects[id].playersolid = false;
+            objects[id].clockid = 0;
 
-            objects[id].sheepsolid  = false;
+            objects[id].carryid = 0;
 
-            objects[id].plrcarry = true;
+            objects[id].playersolid = false;
 
-            break;
+            objects[id].sheepsolid  = false;
 
-            
+            objects[id].plrcarry = true;
 
-        // SHORT_SHAFT_S
+            break;
 
-        case SHORT_SHAFT:
 
-            objects[id].type = SHORT_SHAFT;
 
-            objects[id].num_sprites = 1;
+        // PUMP_KIT
 
-            objects[id].sprite = SHORT_SHAFT_S;
+        case PUMP_KIT:
 
-            objects[id].position = position;
+            objects[id].type = PUMP_KIT;
 
-            objects[id].clockid = 0;
+            objects[id].num_sprites = 1;
 
-            objects[id].carryid = 0;
+            objects[id].sprite = PUMP_KIT_S;
 
-            objects[id].playersolid = false;
+            objects[id].position = position;
 
-            objects[id].sheepsolid  = false;
+            objects[id].clockid = 0;
 
-            objects[id].plrcarry = true;
+            objects[id].carryid = 0;
 
-            break;
+            objects[id].playersolid = false;
 
-            
+            objects[id].sheepsolid  = false;
 
-        // STAKES
+            objects[id].plrcarry = true;
 
-        case STAKES:
+            break;
 
-            objects[id].type = STAKES;
 
-            objects[id].num_sprites = 6;
 
-            objects[id].sprite_num = 1;
+        // SHORT_SHAFT_S
 
-            objects[id].sprite = STAKES_S;
+        case SHORT_SHAFT:
 
-            objects[id].position = position;
+            objects[id].type = SHORT_SHAFT;
 
-            objects[id].clockid = 0;
+            objects[id].num_sprites = 1;
 
-            objects[id].carryid = 0;
+            objects[id].sprite = SHORT_SHAFT_S;
 
-            objects[id].playersolid = false;
+            objects[id].position = position;
 
-            objects[id].sheepsolid  = false;
+            objects[id].clockid = 0;
 
-            objects[id].plrcarry = true;
+            objects[id].carryid = 0;
 
-            break;
+            objects[id].playersolid = false;
 
+            objects[id].sheepsolid  = false;
 
-    }
+            objects[id].plrcarry = true;
+
+            break;
+
+
+
+        // STAKES
+
+        case STAKES:
+
+            objects[id].type = STAKES;
+
+            objects[id].num_sprites = 6;
+
+            objects[id].sprite_num = 1;
+
+            objects[id].sprite = STAKES_S;
+
+            objects[id].position = position;
+
+            objects[id].clockid = 0;
+
+            objects[id].carryid = 0;
+
+            objects[id].playersolid = false;
+
+            objects[id].sheepsolid  = false;
+
+            objects[id].plrcarry = true;
+
+            break;
+
+
+    }
 
 }
 
@@ -1710,31 +1550,31 @@ struct object
 
 {
 
-    int type;
+    int type;
 
-    int num_sprites;
+    int num_sprites;
 
-    int sprite_num;
+    int sprite_num;
 
-    int sprite;
+    int sprite;
 
-    int position;
+    int position;
 
-    bool clock;
+    bool clock;
 
-    int timeid;
+    int timeid;
 
-    int timenum;
+    int timenum;
 
-    int carryid;
+    int carryid;
 
-    bool playersolid;
+    bool playersolid;
 
-    bool sheepsolid;
+    bool sheepsolid;
 
-    bool plrcarry;
+    bool plrcarry;
 
-    bool ret[4];
+    bool ret[4];
 
 };
 
@@ -1745,75 +1585,75 @@ void carrydo(int handid, int groundid, int position)
 
 {
 
-    if(handid == HAND)
+    if(handid == HAND)
 
-        if(objects[groundid].plrcarry == true)
+        if(objects[groundid].plrcarry == true)
 
-        {
+        {
 
-            switch(objects[groundid].type)
+            switch(objects[groundid].type)
 
-            {
+            {
 
-                case STRAIT_BRANCH:
+                case STRAIT_BRANCH:
 
-                case STRAIT_SHAFT:
+                case STRAIT_SHAFT:
 
-                case BENT_BRANCH:
+                case BENT_BRANCH:
 
-                case BENT_SHAFT:
+                case BENT_SHAFT:
 
-                    players.hand = groundid;
+                    players.hand = groundid;
 
-                    objects[groundid].position = 0;
+                    objects[groundid].position = 0;
 
-                    map[position] = 0;
+                    map[position] = 0;
 
-                    break;
+                    break;
 
-                
 
-                default:
 
-                // is stack ?
+                default:
 
-                if((objects[groundid].num_sprites > 1)
+                // is stack ?
 
-                    && (objects[groundid].sprite_num > 1))
+                if((objects[groundid].num_sprites > 1)
 
-                // -1 stack
+                    && (objects[groundid].sprite_num > 1))
 
-                {
+                // -1 stack
 
-                    players.hand = popvid();
+                {
 
-                    setobj(players.hand, objects[groundid].type, 0);
+                    players.hand = popvid();
 
-                    objects[groundid].sprite_num -= 1;
+                    setobj(players.hand, objects[groundid].type, 0);
 
-                    objects[groundid].sprite -= 1;
+                    objects[groundid].sprite_num -= 1;
 
-                }
+                    objects[groundid].sprite -= 1;
 
-                else
+                }
 
-                // pickup
+                else
 
-                {
+                // pickup
 
-                    players.hand = groundid;
+                {
 
-                    objects[groundid].position = 0;
+                    players.hand = groundid;
 
-                    map[position] = 0;
+                    objects[groundid].position = 0;
 
-                }
+                    map[position] = 0;
 
-            }
+                }
 
-            
+            }
 
-            
+
+
+
 
 /*
 
@@ -1821,29 +1661,29 @@ struct player
 
 {
 
-    int position;
+    int position;
 
-    int hunger;
+    int hunger;
 
-    int hungertime;
+    int hungertime;
 
-    int age;
+    int age;
 
-    int bdaytime;
+    int bdaytime;
 
-    int hand;
+    int hand;
 
-    int back;
+    int back;
 
-    int head;
+    int head;
 
-    int body;
+    int body;
 
-    int legs;
+    int legs;
 
-    int lfoot;
+    int lfoot;
 
-    int rfoot;
+    int rfoot;
 
 };
 
@@ -1852,37 +1692,37 @@ struct object
 
 {
 
-    int type;
+    int type;
 
-    int num_sprites;
+    int num_sprites;
 
-    int sprite_num;
+    int sprite_num;
 
-    int sprite;
+    int sprite;
 
-    int position;
+    int position;
 
-    bool clock;
+    bool clock;
 
-    int timeid;
+    int timeid;
 
-    int timenum;
+    int timenum;
 
-    int carryid;
+    int carryid;
 
-    bool playersolid;
+    bool playersolid;
 
-    bool sheepsolid;
+    bool sheepsolid;
 
-    bool plrcarry;
+    bool plrcarry;
 
-    bool ret[4];
+    bool ret[4];
 
 };
 
 */
 
-        }
+        }
 
 }
 
@@ -1891,227 +1731,227 @@ void replacedo(int handid, int groundid, int position)
 
 {
 
-    if(handid == HAND)
+    if(handid == HAND)
 
-    {
+    {
 
-        switch(objects[groundid].type)
+        switch(objects[groundid].type)
 
-        {
+        {
 
-            case YEW:
+            case YEW:
 
-                if(objects[groundid].sprite_num > 1)
+                if(objects[groundid].sprite_num > 1)
 
-                {
+                {
 
-                    players.hand = popvid();
+                    players.hand = popvid();
 
-                    setobj(players.hand, YEW_BRANCH, 0);
+                    setobj(players.hand, YEW_BRANCH, 0);
 
-                    objects[groundid].sprite_num -= 1;
+                    objects[groundid].sprite_num -= 1;
 
-                    objects[groundid].sprite -= 1;
+                    objects[groundid].sprite -= 1;
 
-                    //objects[groundid].sprite
+                    //objects[groundid].sprite
 
-                    // 1hour time !!!!!!
+                    // 1hour time !!!!!!
 
-                }
+                }
 
-                break;
+                break;
 
-                
 
-            // PINE
 
-            case PINE:
+            // PINE
 
-                if(objects[groundid].sprite_num > 1)
+            case PINE:
 
-                {
+                if(objects[groundid].sprite_num > 1)
 
-                    // players.hand = popvid();
+                {
 
-                    // setobj(players.hand, needles!!!!!!!!!!!!!!, 0);
+                    // players.hand = popvid();
 
-                    objects[groundid].sprite_num -= 1;
+                    // setobj(players.hand, needles!!!!!!!!!!!!!!, 0);
 
-                    objects[groundid].sprite -= 1;
+                    objects[groundid].sprite_num -= 1;
 
-                    // objects[groundid].sprite
+                    objects[groundid].sprite -= 1;
 
-                    // 1hour time !!!!!!
+                    // objects[groundid].sprite
 
-                }
+                    // 1hour time !!!!!!
 
-                break;
+                }
 
-            
+                break;
 
-            case MAIPEL:
 
-                if(objects[groundid].sprite_num > 1)
 
-                {
+            case MAIPEL:
 
-                    players.hand = popvid();
+                if(objects[groundid].sprite_num > 1)
 
-                    setobj(players.hand, STRAIT_BRANCH, 0);
+                {
 
-                    objects[groundid].sprite_num -= 1;
+                    players.hand = popvid();
 
-                    objects[groundid].sprite -= 1;
+                    setobj(players.hand, STRAIT_BRANCH, 0);
 
-                    // objects[groundid].sprite
+                    objects[groundid].sprite_num -= 1;
 
-                    // 1hour time !!!!!!
+                    objects[groundid].sprite -= 1;
 
-                }
+                    // objects[groundid].sprite
 
-                break;
+                    // 1hour time !!!!!!
 
-                
+                }
 
-            case BENT:
+                break;
 
-                if(objects[groundid].sprite_num > 1)
 
-                {
 
-                    players.hand = popvid();
+            case BENT:
 
-                    setobj(players.hand, BENT_BRANCH, 0);
+                if(objects[groundid].sprite_num > 1)
 
-                    objects[groundid].sprite_num -= 1;
+                {
 
-                    objects[groundid].sprite -= 1;
+                    players.hand = popvid();
 
-                    // objects[groundid].sprite
+                    setobj(players.hand, BENT_BRANCH, 0);
 
-                    // 1hour time !!!!!!
+                    objects[groundid].sprite_num -= 1;
 
-                }
+                    objects[groundid].sprite -= 1;
 
-                break;
+                    // objects[groundid].sprite
 
-                
+                    // 1hour time !!!!!!
 
-            // pump kit
+                }
 
-            case PUMP_KIT:
+                break;
 
-                if(objects[groundid].sprite_num > 1)
 
-                {
 
-                    players.hand = popvid();
+            // pump kit
 
-                    setobj(players.hand, BENT_SHAFT, 0);
+            case PUMP_KIT:
 
-                    objects[players.hand].sprite_num += 1;
+                if(objects[groundid].sprite_num > 1)
 
-                    objects[players.hand].sprite += 1;
+                {
 
-                    setobj(groundid, STRAIT_SHAFT, position);
+                    players.hand = popvid();
 
-                    objects[groundid].sprite_num += 1;
+                    setobj(players.hand, BENT_SHAFT, 0);
 
-                    objects[groundid].sprite += 1;
+                    objects[players.hand].sprite_num += 1;
 
-                }
+                    objects[players.hand].sprite += 1;
 
-                break;
+                    setobj(groundid, STRAIT_SHAFT, position);
 
-                
+                    objects[groundid].sprite_num += 1;
 
-            default:
+                    objects[groundid].sprite += 1;
 
-                if(objects[groundid].plrcarry == true)
+                }
 
-                {
+                break;
 
-                // is stack ?
 
-                if((objects[groundid].num_sprites > 1)
 
-                    && (objects[groundid].sprite_num > 1))
+            default:
 
-                // -1 stack
+                if(objects[groundid].plrcarry == true)
 
-                {
+                {
 
-                    players.hand = popvid();
+                // is stack ?
 
-                    setobj(players.hand, objects[groundid].type, 0);
+                if((objects[groundid].num_sprites > 1)
 
-                    objects[groundid].sprite_num -= 1;
+                    && (objects[groundid].sprite_num > 1))
 
-                    objects[groundid].sprite -= 1;
+                // -1 stack
 
-                }
+                {
 
-                else
+                    players.hand = popvid();
 
-                // pickup
+                    setobj(players.hand, objects[groundid].type, 0);
 
-                {
+                    objects[groundid].sprite_num -= 1;
 
-                    players.hand = groundid;
+                    objects[groundid].sprite -= 1;
 
-                    objects[groundid].position = 0;
+                }
 
-                    map[position] = 0;
+                else
 
-                }
+                // pickup
 
-                }
+                {
 
-        }
+                    players.hand = groundid;
 
-    }
+                    objects[groundid].position = 0;
 
-    else
+                    map[position] = 0;
 
-    {
+                }
 
-        if(groundid != 0)
+                }
 
-        if(objects[groundid].plrcarry == true)
+        }
 
-        {
+    }
 
-            if(objects[groundid].carryid == 0)
+    else
 
-            {
+    {
 
-                // replace ground
+        if(groundid != 0)
 
-                map[position] = players.hand;
+        if(objects[groundid].plrcarry == true)
 
-                players.hand = groundid;
+        {
 
-                objects[handid].position = position;
+            if(objects[groundid].carryid == 0)
 
-                objects[groundid].position = 0;
+            {
 
-                
+                // replace ground
 
-            }
+                map[position] = players.hand;
 
-            else
+                players.hand = groundid;
 
-            {
+                objects[handid].position = position;
 
-                // replace in
+                objects[groundid].position = 0;
 
-            }
 
-        }
 
-    }
+            }
 
-    
+            else
+
+            {
+
+                // replace in
+
+            }
+
+        }
+
+    }
+
+
 
 /*
 
@@ -2119,7 +1959,7 @@ define YEW_BRANCH 13
 
 #define YEW_BRANCH_S 40
 
-#define BOW_SHAFT    14
+#define BOW_SHAFT    14
 
 #define BOW_SHAFT_S 41
 
@@ -2139,7 +1979,7 @@ define YEW_BRANCH 13
 
 #define BENT_SHAFT_S 48 // +1
 
-#define PUMP_KIT     19
+#define PUMP_KIT     19
 
 #define PUMP_KIT_S 50
 
@@ -2148,31 +1988,31 @@ struct object
 
 {
 
-    int type;
+    int type;
 
-    int num_sprites;
+    int num_sprites;
 
-    int sprite_num;
+    int sprite_num;
 
-    int sprite;
+    int sprite;
 
-    int position;
+    int position;
 
-    bool clock;
+    bool clock;
 
-    int timeid;
+    int timeid;
 
-    int timenum;
+    int timenum;
 
-    int carryid;
+    int carryid;
 
-    bool playersolid;
+    bool playersolid;
 
-    bool sheepsolid;
+    bool sheepsolid;
 
-    bool plrcarry;
+    bool plrcarry;
 
-    bool ret[4];
+    bool ret[4];
 
 };
 
@@ -2185,389 +2025,389 @@ void recepiedo(int handid, int groundid, int position)
 
 {
 
-    if(objects[groundid].type == objects[handid].type)
+    if(objects[groundid].type == objects[handid].type)
 
-    {
+    {
 
-        // stack
+        // stack
 
-        if(objects[groundid].num_sprites > 1)
+        if(objects[groundid].num_sprites > 1)
 
-        if(objects[groundid].sprite_num < 
+        if(objects[groundid].sprite_num < 
 
-                            objects[groundid].num_sprites)
+                            objects[groundid].num_sprites)
 
-        if(objects[handid].sprite_num == 1)
+        if(objects[handid].sprite_num == 1)
 
-        {
+        {
 
-            players.hand = 0;
+            players.hand = 0;
 
-            pushvid(handid);
+            pushvid(handid);
 
-            objects[groundid].sprite_num += 1;
+            objects[groundid].sprite_num += 1;
 
-            objects[groundid].sprite += 1;
+            objects[groundid].sprite += 1;
 
-        }
+        }
 
-    }
+    }
 
-    if(objects[groundid].type == SPACE)
+    if(objects[groundid].type == SPACE)
 
-    {
+    {
 
-        // drop
+        // drop
 
-        map[position] = handid;
+        map[position] = handid;
 
-        objects[handid].position = position;
+        objects[handid].position = position;
 
-        players.hand = 0;
+        players.hand = 0;
 
-    }
+    }
 
-     
 
-    switch(objects[handid].type)
 
-    {
+    switch(objects[handid].type)
 
-        // STONE
+    {
 
-        case STONE:
+        // STONE
 
-            switch(objects[groundid].type)
+        case STONE:
 
-            {
+            switch(objects[groundid].type)
 
-                case BIG_STONE:
+            {
 
-                    setobj(handid, SHARP_STONE, 0);
+                case BIG_STONE:
 
-                    break;
+                    setobj(handid, SHARP_STONE, 0);
 
-                // stakes
+                    break;
 
-                case STAKES:
+                // stakes
 
-                    if(objects[groundid].sprite_num < 
+                case STAKES:
 
-                            objects[groundid].num_sprites)
+                    if(objects[groundid].sprite_num < 
 
-                    {
+                            objects[groundid].num_sprites)
 
-                        objects[groundid].sprite_num += 1;
+                    {
 
-                        objects[groundid].sprite += 1;
+                        objects[groundid].sprite_num += 1;
 
-                        objects[groundid].plrcarry = false;
+                        objects[groundid].sprite += 1;
 
-                    }
+                        objects[groundid].plrcarry = false;
 
-                    else
+                    }
 
-                    {
+                    else
 
-                        objects[groundid].sprite_num = 1;
+                    {
 
-                        objects[groundid].sprite = STAKES_S;
+                        objects[groundid].sprite_num = 1;
 
-                        objects[groundid].plrcarry = true;
+                        objects[groundid].sprite = STAKES_S;
 
-                    }
+                        objects[groundid].plrcarry = true;
 
-                    break;
+                    }
 
-                    // stakestack?
+                    break;
 
-                // scewer
+                    // stakestack?
 
-                    // home marker
+                // scewer
 
-                // adoby
+                    // home marker
 
-                    // adoby base
+                // adoby
 
-                // clay 1
+                    // adoby base
 
-                    // wet clay blowl
+                // clay 1
 
-                // wet clay blowl
+                    // wet clay blowl
 
-                    // wet clay plate
+                // wet clay blowl
 
-                // wet clay plate
+                    // wet clay plate
 
-                    // clay
+                // wet clay plate
 
-                // clay 2
+                    // clay
 
-                    // wet big bowl
+                // clay 2
 
-                // clay 3
+                    // wet big bowl
 
-                    // wet steamer
+                // clay 3
 
-            }
+                    // wet steamer
 
-            break;
+            }
 
-            
+            break;
 
-        // BIG_STONE 
+
+
+        // BIG_STONE 
 
 // SHARP_STONE
 
-        case SHARP_STONE:
+        case SHARP_STONE:
 
-            switch(objects[groundid].type)
+            switch(objects[groundid].type)
 
-            {
+            {
 
-                // flint rock
+                // flint rock
 
-                case FLINT_ROCK:
+                case FLINT_ROCK:
 
-                    setobj(groundid, FLINT_CHIP, position);
+                    setobj(groundid, FLINT_CHIP, position);
 
-                    objects[groundid].sprite_num = 4;
+                    objects[groundid].sprite_num = 4;
 
-                    objects[groundid].sprite += 3;
+                    objects[groundid].sprite += 3;
 
-                    break;
+                    break;
 
-                    // flint chip 4
+                    // flint chip 4
 
-                // flint chip ?1
+                // flint chip ?1
 
-                case FLINT_CHIP:
+                case FLINT_CHIP:
 
-                    if(objects[groundid].sprite_num == 1)
+                    if(objects[groundid].sprite_num == 1)
 
-                        setobj(groundid, ARROW_HEAD, position);
+                        setobj(groundid, ARROW_HEAD, position);
 
-                    break;
+                    break;
 
-                    // arrow head
+                    // arrow head
 
-                // long strait branch (2)
+                // long strait branch (2)
 
-                case STRAIT_BRANCH:
+                case STRAIT_BRANCH:
 
-                    if(objects[groundid].sprite_num == 1)
+                    if(objects[groundid].sprite_num == 1)
 
-                        setobj(groundid, STRAIT_SHAFT, position);
+                        setobj(groundid, STRAIT_SHAFT, position);
 
-                    else
+                    else
 
-                    {
+                    {
 
-                        setobj(groundid, STRAIT_SHAFT, position);
+                        setobj(groundid, STRAIT_SHAFT, position);
 
-                        objects[groundid].sprite_num = 2;
+                        objects[groundid].sprite_num = 2;
 
-                        objects[groundid].sprite += 1;
+                        objects[groundid].sprite += 1;
 
-                    }
+                    }
 
-                    break;
+                    break;
 
-                    // long strait shaft (2)
+                    // long strait shaft (2)
 
-                // bent branch (2)
+                // bent branch (2)
 
-                case BENT_BRANCH:
+                case BENT_BRANCH:
 
-                    if(objects[groundid].sprite_num == 1)
+                    if(objects[groundid].sprite_num == 1)
 
-                        setobj(groundid, BENT_SHAFT, position);
+                        setobj(groundid, BENT_SHAFT, position);
 
-                    else
+                    else
 
-                    {
+                    {
 
-                        setobj(groundid, BENT_SHAFT, position);
+                        setobj(groundid, BENT_SHAFT, position);
 
-                        objects[groundid].sprite_num = 2;
+                        objects[groundid].sprite_num = 2;
 
-                        objects[groundid].sprite += 1;
+                        objects[groundid].sprite += 1;
 
-                    }
+                    }
 
-                    break;
+                    break;
 
-                    // bent shaft (2)
+                    // bent shaft (2)
 
-                // yew branch
+                // yew branch
 
-                case YEW_BRANCH:
+                case YEW_BRANCH:
 
-                        setobj(groundid, BOW_SHAFT, position);
+                        setobj(groundid, BOW_SHAFT, position);
 
-                    break;
+                    break;
 
-                    // yew shaft
+                    // yew shaft
 
-                // long strait shaft 1
+                // long strait shaft 1
 
-                case STRAIT_SHAFT:
+                case STRAIT_SHAFT:
 
-                    if(objects[groundid].sprite_num == 1)
+                    if(objects[groundid].sprite_num == 1)
 
-                        setobj(groundid, SHORT_SHAFT, position);
+                        setobj(groundid, SHORT_SHAFT, position);
 
-                    break;
+                    break;
 
-                    // short strait shaft
+                    // short strait shaft
 
-                // short strait shaft
+                // short strait shaft
 
-                case SHORT_SHAFT:
+                case SHORT_SHAFT:
 
-                        setobj(groundid, STAKES, position);
+                        setobj(groundid, STAKES, position);
 
-                    break;
+                    break;
 
-                    // stakes
+                    // stakes
 
-                    
 
-                // stock
 
-                    // scewer
+                // stock
 
-            }
+                    // scewer
 
-            break;
+            }
 
-            
+            break;
 
-        // FLINT_CHIP
 
-        case FLINT_CHIP:
 
-            switch(objects[groundid].type)
+        // FLINT_CHIP
 
-            {
+        case FLINT_CHIP:
 
-                case FLINT_CHIP:
+            switch(objects[groundid].type)
 
-                    // stack
+            {
 
-                    if(objects[groundid].sprite_num < 
+                case FLINT_CHIP:
 
-                            objects[groundid].num_sprites)
+                    // stack
 
-                    {
+                    if(objects[groundid].sprite_num < 
 
-                        players.hand = 0;
+                            objects[groundid].num_sprites)
 
-                        pushvid(handid);
+                    {
 
-                        objects[groundid].sprite_num += 1;
+                        players.hand = 0;
 
-                        objects[groundid].sprite += 1;
+                        pushvid(handid);
 
-                    }
+                        objects[groundid].sprite_num += 1;
 
-                    break;
+                        objects[groundid].sprite += 1;
 
-                // long strait shaft 1
+                    }
 
-                    // tongs
+                    break;
 
-                // stock
+                // long strait shaft 1
 
-                    // stock with shaving
+                    // tongs
 
-                // dead "animal"
+                // stock
 
-                    // "animal" pelt
+                    // stock with shaving
 
-                    // skinned "animal"
+                // dead "animal"
 
-            }
+                    // "animal" pelt
 
-            break;
+                    // skinned "animal"
 
-            
+            }
 
-        // ARROW_HEAD
+            break;
 
-                // short shaft
 
-                    // hole punch
 
-                // fire bow drill
+        // ARROW_HEAD
 
-                    // flint tip bow drill
+                // short shaft
 
-                // tied skewer
+                    // hole punch
 
-                    // fetherless arrow
+                // fire bow drill
 
-            
+                    // flint tip bow drill
 
-        // 7 - 18
+                // tied skewer
 
-        
+                    // fetherless arrow
 
-        // BENT_BRANCH
 
-        case BENT_SHAFT:
 
-            switch(objects[groundid].type)
+        // 7 - 18
 
-            {
 
-                // strait shaft 2
 
-                case STRAIT_SHAFT:
+        // BENT_BRANCH
 
-                    if(objects[handid].sprite_num == 2)
+        case BENT_SHAFT:
 
-                    if(objects[groundid].sprite_num == 2)
+            switch(objects[groundid].type)
 
-                    {
+            {
 
-                        setobj(groundid, PUMP_KIT, 0);
+                // strait shaft 2
 
-                        players.hand = 0;
+                case STRAIT_SHAFT:
 
-                        pushvid(handid);
+                    if(objects[handid].sprite_num == 2)
 
-                    }
+                    if(objects[groundid].sprite_num == 2)
 
-                    break;
+                    {
 
-                    // pump kit
+                        setobj(groundid, PUMP_KIT, 0);
 
-            }
+                        players.hand = 0;
 
-    }
+                        pushvid(handid);
+
+                    }
+
+                    break;
+
+                    // pump kit
+
+            }
+
+    }
 
 }
 
 /*
 
-#define HAND         0
+#define HAND         0
 
-#define PLAYER_S     3
+#define PLAYER_S     3
 
-#define SPACE        0
+#define SPACE        0
 
-#define SPACE_S      0
+#define SPACE_S      0
 
 #define OOBBARRIER 1
 
 #define OOBBARRIER_S 1
 
-#define STONE        2
+#define STONE        2
 
-#define STONE_S      10 // +9
+#define STONE_S      10 // +9
 
-#define BIG_STONE    3
+#define BIG_STONE    3
 
 #define BIG_STONE_S 20
 
@@ -2587,31 +2427,31 @@ void recepiedo(int handid, int groundid, int position)
 
 #define FLINT_ROCK_S 30
 
-#define YEW          8
+#define YEW          8
 
-#define YEW_S        31 // +1
+#define YEW_S        31 // +1
 
-#define PINE         9
+#define PINE         9
 
-#define PINE_S       33 // +1
+#define PINE_S       33 // +1
 
-#define MAIPEL       10
+#define MAIPEL       10
 
-#define MAIPEL_S     35 // +1
+#define MAIPEL_S     35 // +1
 
-#define BENT         11
+#define BENT         11
 
-#define BENT_S       37 // +1
+#define BENT_S       37 // +1
 
-#define JUNIPER      12
+#define JUNIPER      12
 
-#define JUNIPER_S    39
+#define JUNIPER_S    39
 
 #define YEW_BRANCH 13
 
 #define YEW_BRANCH_S 40
 
-#define BOW_SHAFT    14
+#define BOW_SHAFT    14
 
 #define BOW_SHAFT_S 41
 
@@ -2631,9 +2471,9 @@ void recepiedo(int handid, int groundid, int position)
 
 #define BENT_SHAFT_S 48 // +1
 
-// need recepie 
+// need recepie 
 
-#define PUMP_KIT     19
+#define PUMP_KIT     19
 
 #define PUMP_KIT_S 50
 
@@ -2642,18 +2482,18 @@ void recepiedo(int handid, int groundid, int position)
 
 #define SHORT_SHAFT_S 51
 
-#define STAKES       21
+#define STAKES       21
 
-#define STAKES_S     52 // +5
+#define STAKES_S     52 // +5
 
 
 // need obj set
 
 // need sprite
 
-#define TONGS        22
+#define TONGS        22
 
-#define TONGS_S      58
+#define TONGS_S      58
 
 */
 
@@ -2664,1107 +2504,1107 @@ void setsprites()
 
 {
 
-    strcpy(sprites[SPACE_S],
+    strcpy(sprites[SPACE_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        ");
-
-                        
-
-    strcpy(sprites[OOBBARRIER_S],
-
-                        "........"
-
-                        "........"
-
-                        "........"
-
-                        "........"
-
-                        "........"
-
-                        "........"
-
-                        "........"
-
-                        "........");
+                        "        ");
 
 
-    
 
-    strcpy(sprites[2],  "12345678"
+    strcpy(sprites[OOBBARRIER_S],
 
-                        "abcdefgh"
+                        "........"
 
-                        "ijklmnop"
+                        "........"
 
-                        "qrstuvwx"
+                        "........"
 
-                        "yz......"
+                        "........"
 
-                        "        "
+                        "........"
 
-                        "        "
+                        "........"
 
-                        "        ");
+                        "........"
 
-    
+                        "........");
 
-    strcpy(sprites[PLAYER_S],
 
-                        "        "
 
-                        "   ___  "
 
-                        "  /.,.\\ "
+    strcpy(sprites[2],  "12345678"
 
-                        "  \\_o_/ "
+                        "abcdefgh"
 
-                        "  /[_]\\ "
+                        "ijklmnop"
 
-                        "   [_]  "
+                        "qrstuvwx"
 
-                        "  /   \\ "
+                        "yz......"
 
-                        "        ");
+                        "        "
 
-                        
+                        "        "
+
+                        "        ");
+
+
+
+    strcpy(sprites[PLAYER_S],
+
+                        "        "
+
+                        "   ___  "
+
+                        "  /.,.\\ "
+
+                        "  \\_o_/ "
+
+                        "  /[_]\\ "
+
+                        "   [_]  "
+
+                        "  /   \\ "
+
+                        "        ");
+
+
 
 // stone 10-19 (11-10)
 
-    strcpy(sprites[STONE_S],
+    strcpy(sprites[STONE_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "   ()   "
+                        "   ()   "
 
-                        "        ");
+                        "        ");
 
-                        
 
-    strcpy(sprites[STONE_S + 1],
 
-                        "        "
+    strcpy(sprites[STONE_S + 1],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "  ()()  "
+                        "        "
 
-                        "        ");
+                        "  ()()  "
 
-                        
+                        "        ");
 
-    strcpy(sprites[STONE_S + 2],
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STONE_S + 2],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "  (())  "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "  (())  "
 
-    strcpy(sprites[STONE_S + 3],
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STONE_S + 3],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "   ()   "
+                        "        "
 
-                        "  (())  "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "   ()   "
 
-    strcpy(sprites[STONE_S + 4],
+                        "  (())  "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STONE_S + 4],
 
-                        "        "
+                        "        "
 
-                        "  ()()  "
+                        "        "
 
-                        "  (())  "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[STONE_S + 5],
+                        "  ()()  "
 
-                        "        "
+                        "  (())  "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STONE_S + 5],
 
-                        "  (())  "
+                        "        "
 
-                        "  (())  "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[STONE_S + 6],
+                        "        "
 
-                        "        "
+                        "  (())  "
 
-                        "        "
+                        "  (())  "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "  (())  "
+    strcpy(sprites[STONE_S + 6],
 
-                        " (())() "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[STONE_S + 7],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "  (())  "
 
-                        "        "
+                        " (())() "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "  (())  "
 
-                        " (()()) "
+    strcpy(sprites[STONE_S + 7],
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[STONE_S + 8],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "  (())  "
 
-                        "        "
+                        " (()()) "
 
-                        "        "
+                        "        ");
 
-                        " (())() "
 
-                        " (()()) "
 
-                        "        ");
+    strcpy(sprites[STONE_S + 8],
 
-    
+                        "        "
 
-    strcpy(sprites[STONE_S + 9],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        " (())() "
 
-                        "        "
+                        " (()()) "
 
-                        " (()()) "
+                        "        ");
 
-                        " (()()) "
 
-                        "        ");
+
+    strcpy(sprites[STONE_S + 9],
+
+                        "        "
+
+                        "        "
+
+                        "        "
+
+                        "        "
+
+                        "        "
+
+                        " (()()) "
+
+                        " (()()) "
+
+                        "        ");
 
 
 // bid rock
 
-    strcpy(sprites[BIG_STONE_S],
+    strcpy(sprites[BIG_STONE_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "  ,~~.  "
+                        "  ,~~.  "
 
-                        " {____} "
+                        " {____} "
 
-                        "        ");
+                        "        ");
 
 
 // sharp stone
 
-    strcpy(sprites[SHARP_STONE_S],
+    strcpy(sprites[SHARP_STONE_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "   <)   "
+                        "   <)   "
 
-                        "        ");
+                        "        ");
 
-    
 
-    strcpy(sprites[SHARP_STONE_S + 1],
 
-                        "        "
+    strcpy(sprites[SHARP_STONE_S + 1],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "  <)<)  "
+                        "        "
 
-                        "        ");
+                        "  <)<)  "
 
-    
+                        "        ");
 
-    strcpy(sprites[SHARP_STONE_S + 2],
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[SHARP_STONE_S + 2],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "   <)   "
+                        "        "
 
-                        "  <)<)  "
+                        "        "
 
-                        "        ");
+                        "   <)   "
 
-    
+                        "  <)<)  "
 
-    strcpy(sprites[SHARP_STONE_S + 3],
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[SHARP_STONE_S + 3],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "  <)<)  "
+                        "        "
 
-                        "  <)<)  "
+                        "        "
 
-                        "        ");
+                        "        "
 
-                        
+                        "  <)<)  "
 
-    strcpy(sprites[FLINT_CHIP_S],
+                        "  <)<)  "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[FLINT_CHIP_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "   <>   "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[FLINT_CHIP_S + 1],
+                        "        "
 
-                        "        "
+                        "   <>   "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[FLINT_CHIP_S + 1],
 
-                        "        "
+                        "        "
 
-                        "  <><>  "
+                        "        "
 
-                        "        ");
+                        "        "
 
+                        "        "
 
-    strcpy(sprites[FLINT_CHIP_S + 2],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "  <><>  "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[FLINT_CHIP_S + 2],
 
-                        "   <>   "
+                        "        "
 
-                        "  <><>  "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[FLINT_CHIP_S + 3],
+                        "        "
 
-                        "        "
+                        "   <>   "
 
-                        "        "
+                        "  <><>  "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "  <><>  "
+    strcpy(sprites[FLINT_CHIP_S + 3],
 
-                        "  <><>  "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[ARROW_HEAD_S],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "  <><>  "
 
-                        "        "
+                        "  <><>  "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "   <|   "
+    strcpy(sprites[ARROW_HEAD_S],
 
-                        "        ");
+                        "        "
 
-                        
+                        "        "
 
-    strcpy(sprites[FLINT_ROCK_S],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "   <|   "
 
-                        "        "
+                        "        ");
 
-                        "   ...  "
 
-                        "  (___) "
 
-                        "        ");
+    strcpy(sprites[FLINT_ROCK_S],
 
+                        "        "
 
-    strcpy(sprites[YEW_S],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "   /\\   "
+                        "        "
 
-                        "  {::}  "
+                        "        "
 
-                        "  {::}  "
+                        "   ...  "
 
-                        "  {::}  "
+                        "  (___) "
 
-                        "  {::}  "
+                        "        ");
 
-                        "   ||   "
 
-                        "        ");
+    strcpy(sprites[YEW_S],
 
-                        
+                        "        "
 
-    strcpy(sprites[YEW_S + 1],
+                        "   /\\   "
 
-                        "        "
+                        "  {::}  "
 
-                        "   /\\   "
+                        "  {::}  "
 
-                        "  {::}  "
+                        "  {::}  "
 
-                        "  {::}  "
+                        "  {::}  "
 
-                        "  {::}  "
+                        "   ||   "
 
-                        "  {::}  "
+                        "        ");
 
-                        "   || ] "
 
-                        "        ");
 
+    strcpy(sprites[YEW_S + 1],
 
-    strcpy(sprites[PINE_S],
+                        "        "
 
-                        "        "
+                        "   /\\   "
 
-                        "   /\\   "
+                        "  {::}  "
 
-                        "  //\\\\  "
+                        "  {::}  "
 
-                        "  //\\\\  "
+                        "  {::}  "
 
-                        "  //\\\\  "
+                        "  {::}  "
 
-                        "  //\\\\  "
+                        "   || ] "
 
-                        "   ||   "
+                        "        ");
 
-                        "        ");
 
-                        
+    strcpy(sprites[PINE_S],
 
-    strcpy(sprites[PINE_S + 1],
+                        "        "
 
-                        "        "
+                        "   /\\   "
 
-                        "   /\\   "
+                        "  //\\\\  "
 
-                        "  //\\\\  "
+                        "  //\\\\  "
 
-                        "  //\\\\  "
+                        "  //\\\\  "
 
-                        "  //\\\\  "
+                        "  //\\\\  "
 
-                        "  //\\\\  "
+                        "   ||   "
 
-                        "  ~||~  "
+                        "        ");
 
-                        "        ");
 
-                        
 
-    strcpy(sprites[MAIPEL_S],
+    strcpy(sprites[PINE_S + 1],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "   /\\   "
 
-                        "  {\"\"}  "
+                        "  //\\\\  "
 
-                        " {\"\"\"\"} "
+                        "  //\\\\  "
 
-                        " {\"\"\"\"} "
+                        "  //\\\\  "
 
-                        " {\"\"\"\"} "
+                        "  //\\\\  "
 
-                        "   ||   "
+                        "  ~||~  "
 
-                        "        ");
+                        "        ");
 
 
-    strcpy(sprites[MAIPEL_S + 1],
 
-                        "        "
+    strcpy(sprites[MAIPEL_S],
 
-                        "        "
+                        "        "
 
-                        "  {\"\"}  "
+                        "        "
 
-                        " {\"\"\"\"} "
+                        "  {\"\"}  "
 
-                        " {\"\"\"\"} "
+                        " {\"\"\"\"} "
 
-                        " {\"\"\"\"} "
+                        " {\"\"\"\"} "
 
-                        "   ||[  "
+                        " {\"\"\"\"} "
 
-                        "        ");
+                        "   ||   "
 
+                        "        ");
 
-    strcpy(sprites[BENT_S],
 
-                        "        "
+    strcpy(sprites[MAIPEL_S + 1],
 
-                        "   /\\   "
+                        "        "
 
-                        "  {()}  "
+                        "        "
 
-                        "  {()}  "
+                        "  {\"\"}  "
 
-                        "  {()}  "
+                        " {\"\"\"\"} "
 
-                        "  {()}  "
+                        " {\"\"\"\"} "
 
-                        "   ||   "
+                        " {\"\"\"\"} "
 
-                        "        ");
+                        "   ||[  "
 
-    
+                        "        ");
 
-    strcpy(sprites[BENT_S + 1],
 
-                        "        "
+    strcpy(sprites[BENT_S],
 
-                        "   /\\   "
+                        "        "
 
-                        "  {()}  "
+                        "   /\\   "
 
-                        "  {()}  "
+                        "  {()}  "
 
-                        "  {()}  "
+                        "  {()}  "
 
-                        "  {()}  "
+                        "  {()}  "
 
-                        "   || ] "
+                        "  {()}  "
 
-                        "        ");
+                        "   ||   "
 
-    
+                        "        ");
 
-    strcpy(sprites[JUNIPER_S],
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[BENT_S + 1],
 
-                        "**    **"
+                        "        "
 
-                        " *\\  / *"
+                        "   /\\   "
 
-                        "  / /   "
+                        "  {()}  "
 
-                        "*+  \\** "
+                        "  {()}  "
 
-                        "  \\ /   "
+                        "  {()}  "
 
-                        "        ");
+                        "  {()}  "
 
-                        
+                        "   || ] "
+
+                        "        ");
+
+
+
+    strcpy(sprites[JUNIPER_S],
+
+                        "        "
+
+                        "        "
+
+                        "**    **"
+
+                        " *\\  / *"
+
+                        "  / /   "
+
+                        "*+  \\** "
+
+                        "  \\ /   "
+
+                        "        ");
+
+
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    
 
-    strcpy(sprites[YEW_BRANCH_S],
 
-                        "        "
+    strcpy(sprites[YEW_BRANCH_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        " ////// "
+                        "        "
 
-                        " ______ "
+                        " ////// "
 
-                        "        ");
+                        " ______ "
 
-                        
+                        "        ");
 
-    strcpy(sprites[BOW_SHAFT_S],
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[BOW_SHAFT_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        " ______ "
+                        "        "
 
-                        " ______ "
+                        "        "
 
-                        "        ");
+                        " ______ "
 
-                        
+                        " ______ "
 
-    strcpy(sprites[STRAIT_BRANCH_S],
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STRAIT_BRANCH_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        " ////// "
+                        "        "
 
-                        " ------ "
+                        "        "
 
-                        "        ");
+                        "        "
 
-                        
+                        " ////// "
 
-    strcpy(sprites[STRAIT_BRANCH_S + 1],
+                        " ------ "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STRAIT_BRANCH_S + 1],
 
-                        "        "
+                        "        "
 
-                        " ////// "
+                        "        "
 
-                        " ------ "
+                        "        "
 
-                        " ------ ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[STRAIT_SHAFT_S],
+                        " ////// "
 
-                        "        "
+                        " ------ "
 
-                        "        "
+                        " ------ ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STRAIT_SHAFT_S],
 
-                        " ------ "
+                        "        "
 
-                        " ------ "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[STRAIT_SHAFT_S + 1],
+                        "        "
 
-                        "        "
+                        " ------ "
 
-                        "        "
+                        " ------ "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        " ------ "
+    strcpy(sprites[STRAIT_SHAFT_S + 1],
 
-                        " ------ "
+                        "        "
 
-                        " ------ ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[BENT_BRANCH_S],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        " ------ "
 
-                        "        "
+                        " ------ "
 
-                        "        "
+                        " ------ ");
 
-                        "        "
 
-                        "   ///  "
 
-                        "  {   } "
+    strcpy(sprites[BENT_BRANCH_S],
 
-                        "        ");
+                        "        "
 
-                    
+                        "        "
 
-    strcpy(sprites[BENT_BRANCH_S + 1],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "   ///  "
 
-                        "        "
+                        "  {   } "
 
-                        "        "
+                        "        ");
 
-                        "  ////  "
 
-                        " {{  }} "
 
-                        "        ");
+    strcpy(sprites[BENT_BRANCH_S + 1],
 
-    
+                        "        "
 
-    strcpy(sprites[BENT_SHAFT_S],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "  ////  "
 
-                        "        "
+                        " {{  }} "
 
-                        "   ___  "
+                        "        ");
 
-                        "  (   ) "
 
-                        "        ");
 
-    
+    strcpy(sprites[BENT_SHAFT_S],
 
-    strcpy(sprites[BENT_SHAFT_S + 1],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "   ___  "
 
-                        "  ____  "
+                        "  (   ) "
 
-                        " ((  )) "
+                        "        ");
 
-                        "        ");
 
-    
 
-    strcpy(sprites[PUMP_KIT_S],
+    strcpy(sprites[BENT_SHAFT_S + 1],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        " ------ "
+                        "  ____  "
 
-                        " -____- "
+                        " ((  )) "
 
-                        " ((  )) ");
+                        "        ");
 
-    
 
-    strcpy(sprites[SHORT_SHAFT_S],
 
-                        "        "
+    strcpy(sprites[PUMP_KIT_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "  ___   "
+                        "        "
 
-                        "  ---   "
+                        " ------ "
 
-                        "        ");
+                        " -____- "
 
-    
+                        " ((  )) ");
 
-    strcpy(sprites[STAKES_S],
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[SHORT_SHAFT_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "   ++   "
+                        "        "
 
-                        "   ++   "
+                        "        "
 
-                        "        ");
+                        "  ___   "
 
-                        
+                        "  ---   "
 
-    strcpy(sprites[STAKES_S + 1],
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STAKES_S],
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "+      +"
+                        "        "
 
-                        "+      +"
+                        "        "
 
-                        "        ");
+                        "        "
 
-                        
+                        "   ++   "
 
-    strcpy(sprites[STAKES_S + 2],
+                        "   ++   "
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STAKES_S + 1],
 
-                        "   ++   "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "   ++   ");
+                        "        "
 
-                        
+                        "        "
 
-    strcpy(sprites[STAKES_S + 3],
+                        "+      +"
 
-                        "        "
+                        "+      +"
 
-                        "        "
+                        "        ");
 
-                        "        "
 
-                        "        "
 
-                        "   +    "
+    strcpy(sprites[STAKES_S + 2],
 
-                        "       +"
+                        "        "
 
-                        "+       "
+                        "        "
 
-                        "    +   ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[STAKES_S + 4],
+                        "   ++   "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "   ++   ");
 
-                        "        "
 
-                        "        "
 
-                        "  +  +  "
+    strcpy(sprites[STAKES_S + 3],
 
-                        "  +  +  "
+                        "        "
 
-                        "        ");
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[STAKES_S + 5],
+                        "        "
 
-                        "        "
+                        "   +    "
 
-                        "        "
+                        "       +"
 
-                        "        "
+                        "+       "
 
-                        "        "
+                        "    +   ");
 
-                        "+      +"
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[STAKES_S + 4],
 
-                        "+      +");
+                        "        "
 
-                        
+                        "        "
 
-    strcpy(sprites[TONGS_S],
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "  +  +  "
 
-                        "        "
+                        "  +  +  "
 
-                        "  \\  /  "
+                        "        ");
 
-                        "   \\/   "
 
-                        "   /\\   "
 
-                        "  /  \\  ");
+    strcpy(sprites[STAKES_S + 5],
 
-    
+                        "        "
 
-    
+                        "        "
 
-    
+                        "        "
 
-    strcpy(sprites[0],
+                        "        "
 
-                        "        "
+                        "+      +"
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "        "
 
-                        "        "
+                        "+      +");
 
-                        "        "
 
-                        "        "
 
-                        "        "
+    strcpy(sprites[TONGS_S],
 
-                        "        ");
+                        "        "
 
-                        
+                        "        "
 
-    
+                        "        "
 
-    
+                        "        "
 
-    
+                        "  \\  /  "
 
-    
+                        "   \\/   "
 
-    
+                        "   /\\   "
 
-    
+                        "  /  \\  ");
 
-    
 
-    
+
+
+
+
+
+    strcpy(sprites[0],
+
+                        "        "
+
+                        "        "
+
+                        "        "
+
+                        "        "
+
+                        "        "
+
+                        "        "
+
+                        "        "
+
+                        "        ");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
@@ -3778,17 +3618,17 @@ void setsprites()
 
 juniper
 
-**    **
+**    **
 
- *\  /*
+ *\  /*
 
-  / /
+  / /
 
-*+  \**
+*+  \**
 
-  \/
+  \/
 
-  
+
 
 branch
 
@@ -3832,13 +3672,13 @@ long strait shaft
 
 tongs
 
-\  /
+\  /
 
- \/
+ \/
 
- /\
+ /\
 
-/  \
+/  \
 
 
 short shaft
@@ -3857,9 +3697,9 @@ stakes
 
 ember shaft
 
-   /
+   /
 
-  /
+  /
 
 ------
 
@@ -3884,27 +3724,27 @@ fence kit
 -\__/-
 
 
- __
+ __
 
 /__\
 
-'  '
+'  '
 
 
- ___
-
-/_|_\
-
-' | '
-
-
- ___
+ ___
 
 /_|_\
 
 ' | '
 
-  '
+
+ ___
+
+/_|_\
+
+' | '
+
+  '
 
 
 ______
@@ -3912,13 +3752,13 @@ ______
 \____/
 
 
-   "
+   "
 
 ___|__
 
 \__|_/
 
-   '
+   '
 
 
 seed
@@ -3950,21 +3790,21 @@ kindeling
 *
 
 
-_ 
+_ 
 
 *
 
 
 pine needles
 
- ~~~
+ ~~~
 
 /~~~\
 
 
 fire starter
 
-# 
+# 
 
 
 ##
@@ -3973,7 +3813,7 @@ fire starter
 ###
 
 
-# 
+# 
 
 ###
 
@@ -4026,36 +3866,36 @@ __
 
 iron
 
- ___
+ ___
 
 /__/
 
 
- ____
+ ____
 
 //__/
 
 
- _____
+ _____
 
 ///__/
 
 
-  ___
+  ___
 
- /__/_
+ /__/_
 
 ///__/
 
 
- ____
+ ____
 
 //__/_
 
 ///__/
 
 
- _____
+ _____
 
 ///__/
 
@@ -4067,29 +3907,29 @@ iron
 \~~/
 
 
- 
+
 
 /33\
 
 \33/
 
 
- ___
+ ___
 
 (___)
 
 
- ___
+ ___
 
 (333)
 
 
- __
+ __
 
 [__]
 
 
- __
+ __
 
 [33]
 
@@ -4103,23 +3943,23 @@ fire
 /···\
 
 
- 3
+ 3
 
- 3
+ 3
 
 /1\
 
 
- 3 3
+ 3 3
 
-  3
+  3
 
 /111\
 
 
 3 3 3
 
- 4 4
+ 4 4
 
 /111\\
 
@@ -4141,7 +3981,7 @@ ___
 \_/
 
 
-,,_ 
+,,_ 
 
 \_/
 
@@ -4151,7 +3991,7 @@ ___
 \_/
 
 
- ,
+ ,
 
 ,,,
 
@@ -4181,44 +4021,43 @@ ___
 
 adobe base
 
- _    _
+ _    _
 
 ( \__/ )
 
- \____/
+ \____/
 
- 
+
 
 oven
 
-  ____
+  ____
 
- / __ \
+ / __ \
 
-( /  \ )
+( /  \ )
 
 ( \__/ )
 
- \____/
+ \____/
 
 
 kilm
 
 
-  ||_
+  ||_
 
-  |  \
+  |  \
 
- / __ \
+ / __ \
 
-( /  \ )
+( /  \ )
 
 ( \__/ )
 
- \____/
+ \____/
 
 
 
 */
-
 
