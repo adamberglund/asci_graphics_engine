@@ -1,0 +1,6 @@
+// spr_const.h
+
+#define NUMSPRITES   58
+#define SPRITEWIDTH  8
+#define SPRITEHEIGHT 8
+#define SPRITELENGTH SPRITEWIDTH * SPRITEHEIGHT
